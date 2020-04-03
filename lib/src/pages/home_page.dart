@@ -21,6 +21,7 @@ class _HomePageState extends State<HomePage> {
       List<File> files = await FilePicker.getMultiFile();
       if (files.isNotEmpty) {
         await ApiProvider.subirArchivos(files: files);
+        print('files $files'); //files [File: '/storage/emulated/0/Download/node.png', File: '/storage/emulated/0/Download/cursos.jpg']
       }
     } on PlatformException catch (e) {
       print("Unsupported operation" + e.toString());

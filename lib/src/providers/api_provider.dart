@@ -8,11 +8,12 @@ import 'package:async/async.dart';
 class ApiProvider {
   static Future<void> subirArchivos({List<File> files}) async {
     try {
-      final url = "http://127.0.0.1:3000/subirlista";
+      final url = "http://192.168.1.3:3000/subirlista";
       var uri = Uri.parse(url);
       var request = new http.MultipartRequest("POST", uri);
 
       files.forEach((file) async {
+        print('***filename****');
         print(file.path.split('/').last);
         var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
         var length = await file.length();
@@ -21,7 +22,7 @@ class ApiProvider {
       });
       var response = await request.send();
       response.stream.transform(utf8.decoder).listen((value) {
-        print(value);
+        print('value $value');
       });
 
       throw PlatformException(code: "500", message: "Error /subirlista");
@@ -32,7 +33,7 @@ class ApiProvider {
 
   static Future<void> subirArchivo({File file}) async {
     try {
-      final url = "http://127.0.0.1:3000/subir";
+      final url = "http://192.168.1.3:3000/subir";
       var uri = Uri.parse(url);
       var request = new http.MultipartRequest("POST", uri);
       var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
