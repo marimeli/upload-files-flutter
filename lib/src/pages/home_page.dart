@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
               padding: EdgeInsets.only(top: 50.0, bottom: 20.0),
               child: RaisedButton(
                 onPressed: () => _openFileExplorer(),
-                child: Text("Search file"),
+                child: Text("Open file picker"),
               ),
             ),
           ],
