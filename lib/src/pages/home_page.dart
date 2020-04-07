@@ -18,10 +18,13 @@ class _HomePageState extends State<HomePage> {
 
   void _openFileExplorer() async {
     try {
-      List<File> files = await FilePicker.getMultiFile();
-      if (files.isNotEmpty) {
-        await ApiProvider.subirArchivos(files: files);
-        print('files $files'); //files [File: '/storage/emulated/0/Download/node.png', File: '/storage/emulated/0/Download/cursos.jpg']
+      File file = await FilePicker.getFile(type: FileType.any);
+
+      if (file == null) {
+        print('no tiene archivo adjunto');
+      } else {
+        await ApiProvider.upload(file);
+        print('file $file');
       }
     } on PlatformException catch (e) {
       print("Unsupported operation" + e.toString());

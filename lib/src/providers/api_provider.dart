@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
@@ -31,28 +32,21 @@ class ApiProvider {
     }
   }
 
-  static Future<void> subirArchivo({File file}) async {
-    try {
-      final url = "http://192.168.1.3:3000/subir";
-      var uri = Uri.parse(url);
-      var request = new http.MultipartRequest("POST", uri);
-      var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
-      var length = await file.length();
-      request.files.add(
-        new http.MultipartFile(
-          'file',
-          stream,
-          length,
-          filename: basename(file.path),
-        ),
-      );
-      var response = await request.send();
-      response.stream.transform(utf8.decoder).listen((value) {
-        print(value);
-      });
-      throw PlatformException(code: "500", message: "Error /subirlista");
-    } on PlatformException catch (e) {
-      return (e.message);
-    }
+ static Future<void> upload(File file) async {
+    String fileName = file.path.split('/').last;
+
+    FormData data = FormData.fromMap({
+      "file": await MultipartFile.fromFile(
+        file.path,
+        filename: fileName,
+      ),
+    });
+
+    Dio dio = new Dio();
+
+    dio
+        .post("http://192.168.1.3:3000/subir", data: data)
+        .then((response) => print(response))
+        .catchError((error) => print(error));
   }
 }
